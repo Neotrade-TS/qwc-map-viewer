@@ -9,6 +9,13 @@ jobs:
 
       - uses: actions/checkout@master
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Get version tag
         id: get_tag
         run: |
@@ -21,21 +28,27 @@ jobs:
           fi
 
       - name: Build and publish base container
-        uses: elgohr/Publish-Docker-Github-Action@2.12
+        uses: neotrade-ts/Publish-Docker-Github-Action@4
         with:
           name: sourcepole/qwc-map-viewer-base
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
           tags: "${{ steps.get_tag.outputs.tag }}"
+          platforms: linux/arm64,linux/amd64
+
 
       - name: Build and publish demo container
-        uses: elgohr/Publish-Docker-Github-Action@2.12
+        uses: neotrade-ts/Publish-Docker-Github-Action@4
         env:
           QWC2_URL: https://github.com/qgis/qwc2-demo-app/releases/download/${{ steps.get_tag.outputs.app_version }}/qwc2-demo-app.zip
         with:
           name: sourcepole/qwc-map-viewer-demo
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
           tags: "${{ steps.get_tag.outputs.tag }}"
           dockerfile: Dockerfile-qwc2-app
           buildargs: "QWC2_URL"
+          platforms: linux/arm64,linux/amd64
+
