@@ -1,4 +1,4 @@
-FROM sourcepole/qwc-map-viewer-base:latest
+FROM ghcr.io/neotrade-ts/qwc-map-viewer-base:latest
 
 ARG QWC2_URL
 # Optional token for download with authorization
