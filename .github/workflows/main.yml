@@ -30,7 +30,7 @@ jobs:
       - name: Build and publish base container
         uses: elgohr/Publish-Docker-Github-Action@v4
         with:
-          name: neotrade-ts/qwc-map-viewer-base
+          name: neotrade-ts/${{ github.event.repository.name }}-base
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
@@ -43,7 +43,7 @@ jobs:
         env:
           QWC2_URL: https://github.com/qgis/qwc2-demo-app/releases/download/${{ steps.get_tag.outputs.app_version }}/qwc2-demo-app.zip
         with:
-          name: neotrade-ts/qwc-map-viewer-demo
+          name: neotrade-ts/${{ github.event.repository.name }}-demo
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
